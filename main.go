@@ -8,12 +8,13 @@ import (
 )
 
 const APIEndpoint string = "https://swapi.co/api/"
+const APIResource string = "planets/"
 
 func main() {
 
 	var planet Planet
 
-	resp, _ := http.Get(APIEndpoint + "planets/1")
+	resp, _ := http.Get(APIEndpoint + APIResource + "1")
 	body, _ := ioutil.ReadAll(resp.Body)
 	_ = json.Unmarshal(body, &planet)
 	fmt.Println(planet)
