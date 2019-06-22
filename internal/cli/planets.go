@@ -1,6 +1,7 @@
-package main
+package cli
 
-import (
+import(
+	"github.com/spf13/cobra"
 	"encoding/csv"
 	"encoding/json"
 	"io/ioutil"
@@ -8,26 +9,39 @@ import (
 	"os"
 )
 
+type CobraFn func(cmd *cobra.Command, args []string)
+
+func InitPlanetsCmd() *cobra.Command {
+	planetsCmd := &cobra.Command {
+		Use: "planets",
+		Short: "Save planet to csv file",
+		Run: runPlanetsFn(),
+	}
+	return planetsCmd
+}
+
 const APIEndpoint string = "https://swapi.co/api/"
 const APIResource string = "planets/"
 
-func main() {
+func runPlanetsFn() CobraFn {
+	return func(cmd *cobra.Command, args []string) {
 
-	var planet Planet
+		var planet Planet
 
-	IDResource := "1"
+		IDResource := "1"
 
-	resp, _ := http.Get(APIEndpoint + APIResource + IDResource)
-	body, _ := ioutil.ReadAll(resp.Body)
-	json.Unmarshal(body, &planet)
+		resp, _ := http.Get(APIEndpoint + APIResource + IDResource)
+		body, _ := ioutil.ReadAll(resp.Body)
+		json.Unmarshal(body, &planet)
 
-	f, _ := os.Create("planet." + IDResource + ".csv")
-	defer f.Close()
+		f, _ := os.Create("planet." + IDResource + ".csv")
+		defer f.Close()
 
-	csvWriter := csv.NewWriter(f)
+		csvWriter := csv.NewWriter(f)
 
-	csvWriter.Write(planet.ToArray())
-	csvWriter.Flush()
+		csvWriter.Write(planet.ToArray())
+		csvWriter.Flush()
+	}
 }
 
 type Planet struct {
