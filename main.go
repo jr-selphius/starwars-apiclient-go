@@ -1,10 +1,11 @@
 package main
 
 import (
+	"encoding/csv"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 )
 
 const APIEndpoint string = "https://swapi.co/api/"
@@ -18,8 +19,15 @@ func main() {
 
 	resp, _ := http.Get(APIEndpoint + APIResource + IDResource)
 	body, _ := ioutil.ReadAll(resp.Body)
-	_ = json.Unmarshal(body, &planet)
-	fmt.Println(planet)
+	json.Unmarshal(body, &planet)
+
+	f, _ := os.Create("planet." + IDResource + ".csv")
+	defer f.Close()
+
+	csvWriter := csv.NewWriter(f)
+
+	csvWriter.Write(planet.ToArray())
+	csvWriter.Flush()
 }
 
 type Planet struct {
@@ -34,4 +42,8 @@ type Planet struct {
 	Created        string `json:"created"`
 	Edited         string `json:"edited"`
 	URL            string `json:"url"`
+}
+
+func (p *Planet) ToArray() []string {
+	return []string{p.Name, p.RotationPeriod, p.OrbitalPeriod, p.Diameter, p.Climate, p.Gravity, p.SurfaceWater, p.Population, p.Created, p.Edited, p.URL}
 }
