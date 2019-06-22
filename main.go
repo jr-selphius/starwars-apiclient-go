@@ -7,11 +7,13 @@ import (
 	"fmt"
 )
 
+const APIEndpoint string = "https://swapi.co/api/"
+
 func main() {
 
 	var planet Planet
 
-	resp, _ := http.Get("https://swapi.co/api/planets/1")
+	resp, _ := http.Get(APIEndpoint + "planets/1")
 	body, _ := ioutil.ReadAll(resp.Body)
 	_ = json.Unmarshal(body, &planet)
 	fmt.Println(planet)
