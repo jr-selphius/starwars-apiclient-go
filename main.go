@@ -19,7 +19,7 @@ func main() {
 	resp, _ := http.Get(APIEndpoint + APIResource + IDResource)
 	body, _ := ioutil.ReadAll(resp.Body)
 	_ = json.Unmarshal(body, &planet)
-	fmt.Println(planet)
+	fmt.Println(planet.ToCsv())
 }
 
 type Planet struct {
@@ -34,4 +34,8 @@ type Planet struct {
 	Created        string `json:"created"`
 	Edited         string `json:"edited"`
 	URL            string `json:"url"`
+}
+
+func (p *Planet) ToCsv() string {
+	return p.Name + "," + p.RotationPeriod + "," + p.OrbitalPeriod + "," + p.Diameter + "," + p.Climate + "," + p.Gravity + "," + p.SurfaceWater + "," + p.SurfaceWater + "," + p.Population + "," + p.Created + "," + p.Edited + "," + p.URL
 }
