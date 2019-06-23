@@ -1,12 +1,10 @@
 package cli
 
 import (
-	"encoding/csv"
-	"encoding/json"
-	"io/ioutil"
-	"net/http"
-	"os"
-
+	"fmt"
+	"github.com/jr-selphius/starwars-apiclient-go/internal"
+	"github.com/jr-selphius/starwars-apiclient-go/internal/storage/remote"
+	"github.com/jr-selphius/starwars-apiclient-go/internal/storage/csv"
 	"github.com/spf13/cobra"
 )
 
@@ -38,36 +36,18 @@ func runPlanetsFn() CobraFn {
 			IDResource = "1"
 		}
 
-		var planet Planet
+		var remoteRepository internal.PlanetRepo
+		remoteRepository = remote.NewRemoteRepository()
+		planet, err := remoteRepository.GetPlanet(IDResource)
+		if err != nil {
+			fmt.Println("There was an error getting the planet "+ IDResource +" remotely")
+		}
 
-		resp, _ := http.Get(APIEndpoint + APIResource + IDResource)
-		body, _ := ioutil.ReadAll(resp.Body)
-		json.Unmarshal(body, &planet)
-
-		f, _ := os.Create("planet." + IDResource + ".csv")
-		defer f.Close()
-
-		csvWriter := csv.NewWriter(f)
-
-		csvWriter.Write(planet.ToArray())
-		csvWriter.Flush()
+		var csvRepository internal.PlanetRepo
+		csvRepository = csv.NewCsvRepository()
+		err = csvRepository.AddPlanet(planet)
+		if err != nil {
+			fmt.Println("There was an error saving the planet "+ IDResource + "to disk")
+		}
 	}
-}
-
-type Planet struct {
-	Name           string `json:"name"`
-	RotationPeriod string `json:"rotation_period"`
-	OrbitalPeriod  string `json:"orbital_period"`
-	Diameter       string `json:"diameter"`
-	Climate        string `json:"climate"`
-	Gravity        string `json:"gravity"`
-	SurfaceWater   string `json:"surface_water"`
-	Population     string `json:"population"`
-	Created        string `json:"created"`
-	Edited         string `json:"edited"`
-	URL            string `json:"url"`
-}
-
-func (p *Planet) ToArray() []string {
-	return []string{p.Name, p.RotationPeriod, p.OrbitalPeriod, p.Diameter, p.Climate, p.Gravity, p.SurfaceWater, p.Population, p.Created, p.Edited, p.URL}
 }
