@@ -1,12 +1,10 @@
 package cli
 
 import (
-	"encoding/csv"
-	"os"
 	"fmt"
-
 	"github.com/jr-selphius/starwars-apiclient-go/internal"
 	"github.com/jr-selphius/starwars-apiclient-go/internal/storage/remote"
+	"github.com/jr-selphius/starwars-apiclient-go/internal/storage/csv"
 	"github.com/spf13/cobra"
 )
 
@@ -45,12 +43,11 @@ func runPlanetsFn() CobraFn {
 			fmt.Println("There was an error getting the planet "+ IDResource +" remotely")
 		}
 
-		f, _ := os.Create("planet." + IDResource + ".csv")
-		defer f.Close()
-
-		csvWriter := csv.NewWriter(f)
-
-		csvWriter.Write(planet.ToArray())
-		csvWriter.Flush()
+		var csvRepository internal.PlanetRepo
+		csvRepository = csv.NewCsvRepository()
+		err = csvRepository.AddPlanet(planet)
+		if err != nil {
+			fmt.Println("There was an error saving the planet "+ IDResource + "to disk")
+		}
 	}
 }

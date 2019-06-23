@@ -42,7 +42,7 @@ func (p *planetRepo) GetPlanet(id string) (planet *internal.Planet, err error) {
 	return
 }
 
-func (p *planetRepo) AddPlanet(planet *internal.Planet) {
+func (p *planetRepo) AddPlanet(planet *internal.Planet) error {
 	fmt.Printf("Not implemented")
 	panic(1)
 }

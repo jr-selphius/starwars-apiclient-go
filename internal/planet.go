@@ -20,5 +20,5 @@ func (p *Planet) ToArray() []string {
 
 type PlanetRepo interface {
 	GetPlanet(id string) (*Planet, error)
-	AddPlanet(planet *Planet)
+	AddPlanet(planet *Planet) error
 }
