@@ -17,3 +17,7 @@ type Planet struct {
 func (p *Planet) ToArray() []string {
 	return []string{p.Name, p.RotationPeriod, p.OrbitalPeriod, p.Diameter, p.Climate, p.Gravity, p.SurfaceWater, p.Population, p.Created, p.Edited, p.URL}
 }
+
+type PlanetRepo interface {
+	GetPlanet(id string) (*Planet, error)
+}
