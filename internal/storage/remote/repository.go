@@ -2,6 +2,7 @@ package remote
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -29,7 +30,19 @@ func (p *planetRepo) GetPlanet(id string) (planet *cli.Planet, err error) {
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
 	err = json.Unmarshal(body, &planet)
+	if err != nil {
+		return nil, err
+	}
 
 	return
+}
+
+func (p *planetRepo) AddPlanet(planet *cli.Planet) {
+	fmt.Printf("Not implemented")
+	panic(1)
 }
