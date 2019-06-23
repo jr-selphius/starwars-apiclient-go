@@ -44,10 +44,6 @@ func runPlanetsFn() CobraFn {
 		if err != nil {
 			fmt.Println("There was an error getting the planet "+ IDResource +" remotely")
 		}
-		//repo = csv.NewRepository()
-		//resp, _ := http.Get(APIEndpoint + APIResource + IDResource)
-		//body, _ := ioutil.ReadAll(resp.Body)
-		//json.Unmarshal(body, &planet)
 
 		f, _ := os.Create("planet." + IDResource + ".csv")
 		defer f.Close()
