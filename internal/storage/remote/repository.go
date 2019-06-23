@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/jr-selphius/starwars-apiclient-go/internal/cli"
+	"github.com/jr-selphius/starwars-apiclient-go/internal"
 )
 
 const (
@@ -18,11 +18,11 @@ type planetRepo struct {
 	url string
 }
 
-func NewRemoteRepository() cli.PlanetRepo {
+func NewRemoteRepository() internal.PlanetRepo {
 	return &planetRepo{url: APIEndpoint}
 }
 
-func (p *planetRepo) GetPlanet(id string) (planet *cli.Planet, err error) {
+func (p *planetRepo) GetPlanet(id string) (planet *internal.Planet, err error) {
 
 	resp, err := http.Get(APIEndpoint + APIResource + id)
 	if err != nil {
@@ -42,7 +42,7 @@ func (p *planetRepo) GetPlanet(id string) (planet *cli.Planet, err error) {
 	return
 }
 
-func (p *planetRepo) AddPlanet(planet *cli.Planet) {
+func (p *planetRepo) AddPlanet(planet *internal.Planet) {
 	fmt.Printf("Not implemented")
 	panic(1)
 }

@@ -2,11 +2,11 @@ package cli
 
 import (
 	"encoding/csv"
-	"encoding/json"
-	"io/ioutil"
-	"net/http"
 	"os"
+	"fmt"
 
+	"github.com/jr-selphius/starwars-apiclient-go/internal"
+	"github.com/jr-selphius/starwars-apiclient-go/internal/storage/remote"
 	"github.com/spf13/cobra"
 )
 
@@ -38,11 +38,16 @@ func runPlanetsFn() CobraFn {
 			IDResource = "1"
 		}
 
-		var planet Planet
-
-		resp, _ := http.Get(APIEndpoint + APIResource + IDResource)
-		body, _ := ioutil.ReadAll(resp.Body)
-		json.Unmarshal(body, &planet)
+		var remoteRepository internal.PlanetRepo
+		remoteRepository = remote.NewRemoteRepository()
+		planet, err := remoteRepository.GetPlanet(IDResource)
+		if err != nil {
+			fmt.Println("There was an error getting the planet "+ IDResource +" remotely")
+		}
+		//repo = csv.NewRepository()
+		//resp, _ := http.Get(APIEndpoint + APIResource + IDResource)
+		//body, _ := ioutil.ReadAll(resp.Body)
+		//json.Unmarshal(body, &planet)
 
 		f, _ := os.Create("planet." + IDResource + ".csv")
 		defer f.Close()

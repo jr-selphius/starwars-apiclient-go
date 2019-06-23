@@ -1,4 +1,4 @@
-package cli
+package internal
 
 type Planet struct {
 	Name           string `json:"name"`
@@ -20,5 +20,5 @@ func (p *Planet) ToArray() []string {
 
 type PlanetRepo interface {
 	GetPlanet(id string) (*Planet, error)
-	AddPlanet(planet Planet)
+	AddPlanet(planet *Planet)
 }
