@@ -1,9 +1,10 @@
 package csv
 
 import (
-	"fmt"
 	"encoding/csv"
+	"fmt"
 	"os"
+
 	"github.com/jr-selphius/starwars-apiclient-go/internal"
 )
 
@@ -14,9 +15,8 @@ func NewCsvRepository() internal.PlanetRepo {
 	return &planetRepo{}
 }
 
-
 func (p *planetRepo) AddPlanet(planet *internal.Planet) error {
-	f, err := os.Create("planet.csv")
+	f, err := os.Create("planet." + planet.ID + ".csv")
 	defer f.Close()
 
 	csvWriter := csv.NewWriter(f)

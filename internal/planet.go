@@ -1,6 +1,7 @@
 package internal
 
 type Planet struct {
+	ID             string
 	Name           string `json:"name"`
 	RotationPeriod string `json:"rotation_period"`
 	OrbitalPeriod  string `json:"orbital_period"`
