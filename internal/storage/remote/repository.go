@@ -39,6 +39,8 @@ func (p *planetRepo) GetPlanet(id string) (planet *internal.Planet, err error) {
 		return nil, err
 	}
 
+	planet.ID = id
+
 	return
 }
 
