@@ -1,8 +1,7 @@
-package remote
+package fetching
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -14,15 +13,19 @@ const (
 	APIResource string = "planets/"
 )
 
-type planetRepo struct {
+type Service interface {
+	GetPlanet(id string) (*internal.Planet, error)
+}
+
+type service struct {
 	url string
 }
 
-func NewRemoteRepository() internal.PlanetRepo {
-	return &planetRepo{url: APIEndpoint}
+func NewService() Service {
+	return &service{}
 }
 
-func (p *planetRepo) GetPlanet(id string) (planet *internal.Planet, err error) {
+func (s *service) GetPlanet(id string) (planet *internal.Planet, err error) {
 
 	resp, err := http.Get(APIEndpoint + APIResource + id)
 	if err != nil {
@@ -42,9 +45,4 @@ func (p *planetRepo) GetPlanet(id string) (planet *internal.Planet, err error) {
 	planet.ID = id
 
 	return
-}
-
-func (p *planetRepo) AddPlanet(planet *internal.Planet) error {
-	fmt.Printf("Not implemented")
-	panic(1)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	. "github.com/jr-selphius/starwars-apiclient-go/internal"
+	. "github.com/jr-selphius/starwars-apiclient-go/internal/fetching"
 	"github.com/spf13/cobra"
 )
 
@@ -11,11 +12,11 @@ type CobraFn func(cmd *cobra.Command, args []string)
 
 const idFlag string = "id"
 
-func InitPlanetsCmd(remoteRepository PlanetRepo, csvRepository PlanetRepo) *cobra.Command {
+func InitPlanetsCmd(fetchingService Service, csvRepository PlanetRepo) *cobra.Command {
 	planetsCmd := &cobra.Command{
 		Use:   "planets",
 		Short: "Save planet to csv file",
-		Run:   runPlanetsFn(remoteRepository, csvRepository),
+		Run:   runPlanetsFn(fetchingService, csvRepository),
 	}
 
 	planetsCmd.Flags().StringP(idFlag, "i", "", "id of the planet")
@@ -26,7 +27,7 @@ func InitPlanetsCmd(remoteRepository PlanetRepo, csvRepository PlanetRepo) *cobr
 const APIEndpoint string = "https://swapi.co/api/"
 const APIResource string = "planets/"
 
-func runPlanetsFn(remoteRepository PlanetRepo, csvRepository PlanetRepo) CobraFn {
+func runPlanetsFn(fetchingService Service, csvRepository PlanetRepo) CobraFn {
 	return func(cmd *cobra.Command, args []string) {
 
 		IDResource, _ := cmd.Flags().GetString(idFlag)
@@ -35,7 +36,7 @@ func runPlanetsFn(remoteRepository PlanetRepo, csvRepository PlanetRepo) CobraFn
 			IDResource = "1"
 		}
 
-		planet, err := remoteRepository.GetPlanet(IDResource)
+		planet, err := fetchingService.GetPlanet(IDResource)
 		if err != nil {
 			fmt.Println("There was an error getting the planet " + IDResource + " remotely")
 		}
